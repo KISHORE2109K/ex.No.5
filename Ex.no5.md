@@ -36,6 +36,7 @@ Use setInterval to call the nextImage() function at regular intervals.
 Clean up the interval when the component unmounts using clearInterval to prevent memory leaks.
 
 ## PROGRAM
+```js
 import React, { useEffect, useState } from 'react';
 import './ImageComponent.css'
 
@@ -91,7 +92,8 @@ const ImageCarousel = () => {
     )
 }
 
-export default ImageCarousel
+export default ImageCarousel;
+```
 OUTPUT
 <img width="1910" height="885" alt="image" src="https://github.com/user-attachments/assets/25a69d0f-cf75-4918-893c-e1d6437f8197" />
 
