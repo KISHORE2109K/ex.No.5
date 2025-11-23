@@ -1,48 +1,169 @@
-# Ex05 Image Carousel
-## Date:
+Ex06 BMI Calculator
+Date: 10-11-2025
+AIM
+To create a BMI calculator using React Router
 
-## AIM
-To create a Image Carousel using React 
+ALGORITHM
+STEP 1 State Initialization
+Manage the current page (Home or Calculator) using React Router.
 
-## ALGORITHM
-### STEP 1 Initial Setup:
-Input: A list of images to display in the carousel.
+STEP 2 User Input
+Accept weight and height inputs from the user.
 
-Output: A component displaying the images with navigation controls (e.g., next/previous buttons).
+STEP 3 BMI Calculation
+Calculate the BMI based on user input.
 
-### Step 2 State Management:
-Use a state variable (currentIndex) to track the index of the current image displayed.
+STEP 4 Categorization
+Classify the BMI result into categories (Underweight, Normal weight, Overweight, Obesity).
 
-The carousel starts with the first image, so initialize currentIndex to 0.
+STEP 5 Navigation
+Navigate between pages using React Router.
 
-### Step 3 Navigation Controls:
-Next Image: When the "Next" button is clicked, increment currentIndex.
+PROGRAM
+App.jsx
+import "./App.css";
+import { Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Calculator from "./pages/Calculator";
 
-If currentIndex is at the end of the image list (last image), loop back to the first image using modulo:
-currentIndex = (currentIndex + 1) % images.length;
+function App() {
+	return (
+		<div className="app-root">
+			<header className="app-header">
+				<h1>BMI Calculator</h1>
+				<nav>
+					<Link to="/">Home</Link>
+					<Link to="/calculator">Calculator</Link>
+				</nav>
+			</header>
 
-Previous Image: When the "Previous" button is clicked, decrement currentIndex.
+			<main className="app-main">
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/calculator" element={<Calculator />} />
+				</Routes>
+			</main>
+		</div>
+	);
+}
 
-If currentIndex is at the beginning (first image), loop back to the last image:
-currentIndex = (currentIndex - 1 + images.length) % images.length;
+export default App;
+Home.jsx
+import { Link } from "react-router-dom";
+import "./Home.css";
 
-### Step 4 Displaying the Image:
-The currentIndex determines which image is displayed.
+export default function Home() {
+	return (
+		<div className="home-page">
+			<h2>Welcome</h2>
+			<p>
+				This simple app calculates Body Mass Index (BMI). Click below to
+				go to the calculator.
+			</p>
+			<Link to="/calculator" className="btn">
+				Go to Calculator
+			</Link>
+		</div>
+	);
+}
+Calculator.jsx
+import { useState } from "react";
+import "./Calculator.css";
 
-Using the currentIndex, display the corresponding image from the images list.
+function categorize(bmi) {
+	if (bmi <= 0 || Number.isNaN(bmi)) return "";
+	if (bmi < 18.5) return "Underweight";
+	if (bmi < 25) return "Normal weight";
+	if (bmi < 30) return "Overweight";
+	return "Obesity";
+}
 
-### Step 5 Auto-Rotation:
-Set an interval to automatically change the image after a set amount of time (e.g., 3 seconds).
+export default function Calculator() {
+	const [weight, setWeight] = useState(""); // kg
+	const [height, setHeight] = useState(""); // cm
+	const [result, setResult] = useState(null);
 
-Use setInterval to call the nextImage() function at regular intervals.
+	function calculate(e) {
+		e.preventDefault();
+		const w = parseFloat(weight);
+		const hCm = parseFloat(height);
+		if (!w || !hCm || w <= 0 || hCm <= 0) {
+			setResult({
+				error: "Please enter positive numbers for weight and height.",
+			});
+			return;
+		}
+		const h = hCm / 100;
+		const bmi = w / (h * h);
+		const rounded = Math.round(bmi * 100) / 100;
+		setResult({ bmi: rounded, category: categorize(rounded) });
+	}
 
-Clean up the interval when the component unmounts using clearInterval to prevent memory leaks.
+	function reset() {
+		setWeight("");
+		setHeight("");
+		setResult(null);
+	}
 
-## PROGRAM
+	return (
+		<div className="calculator-page">
+			<h2>BMI Calculator</h2>
+			<form onSubmit={calculate} className="bmi-form">
+				<label>
+					Weight (kg)
+					<input
+						type="number"
+						step="any"
+						min="0"
+						value={weight}
+						onChange={(e) => setWeight(e.target.value)}
+						placeholder="e.g. 70"
+					/>
+				</label>
 
+				<label>
+					Height (cm)
+					<input
+						type="number"
+						step="any"
+						min="0"
+						value={height}
+						onChange={(e) => setHeight(e.target.value)}
+						placeholder="e.g. 175"
+					/>
+				</label>
 
-## OUTPUT
+				<div className="form-actions">
+					<button type="submit" className="btn primary">
+						Calculate
+					</button>
+					<button type="button" className="btn" onClick={reset}>
+						Reset
+					</button>
+				</div>
+			</form>
 
+			{result && (
+				<section className="result">
+					{result.error ? (
+						<p className="error">{result.error}</p>
+					) : (
+						<>
+							<p>
+								Your BMI is <strong>{result.bmi}</strong>
+							</p>
+							<p>
+								Category: <strong>{result.category}</strong>
+							</p>
+						</>
+					)}
+				</section>
+			)}
+		</div>
+	);
+}
+OUTPUT
+alt text
 
-## RESULT
-The program for creating Image Carousel using React is executed successfully.
+RESULT
+The program for creating BMI Calculator using React Router is executed successfully.
