@@ -1,5 +1,5 @@
 # MWAD_EX05_image-carousel-in-react
-## Date: 28-10-2025
+## Date: 20-11-2025
 ## AIM
 To create a Image Carousel using React
 
